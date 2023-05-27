@@ -62,10 +62,8 @@ public class TicketService {
         String frmStation = String.valueOf(bookTicketEntryDto.getFromStation());
         String toStation = String.valueOf(bookTicketEntryDto.getToStation());
 
-        boolean from = false;
-        boolean to = false;
-        int x = 0;
-        int y = 0;
+        int x = -1;
+        int y = -1;
 
         for(int i = 0; i < str.length; i++){
             if(str[i]==frmStation){
@@ -81,7 +79,7 @@ public class TicketService {
             }
         }
 
-        if(x==0 || y==0){
+        if(x==-1 || y==-1 || y-x < 0){
             throw new Exception("Invalid stations");
         }
 
