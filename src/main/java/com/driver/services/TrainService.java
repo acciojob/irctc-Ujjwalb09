@@ -134,7 +134,7 @@ public class TrainService {
 
         Train train = trainRepository.findById(trainId).get();
 
-        int oldestPerson = Integer.MAX_VALUE;
+        int oldestPerson = Integer.MIN_VALUE;
 
         if(train.getBookedTickets().size()==0)return 0;
 
