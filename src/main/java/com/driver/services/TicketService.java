@@ -55,29 +55,26 @@ public class TicketService {
 
         //checking if stations area valid or not
 
-        String routes = train.getRoute();
-
-        String[] str = routes.split(",");
-
-        String frmStation = String.valueOf(bookTicketEntryDto.getFromStation());
-        String toStation = String.valueOf(bookTicketEntryDto.getToStation());
-
-        boolean from = false;
-        boolean to = false;
-        int x = 0;
-        int y = 0;
-
-        for(int i = 0; i < str.length; i++){
-            if(str[i]==frmStation){
-                x = i;
-                from = true;
-            } else if(str[i]==toStation){
-                y = i;
-                to = true;
+        String stations[]=train.getRoute().split(",");
+        List<Passenger>passengerList1=new ArrayList<>();
+        List<Integer>ids=bookTicketEntryDto.getPassengerIds();
+        for(int id: ids){
+            passengerList1.add(passengerRepository.findById(id).get());
+        }
+        int x=-1,y=-1;
+        for(int i=0;i<stations.length;i++){
+            if(bookTicketEntryDto.getFromStation().toString().equals(stations[i])){
+                x=i;
+                break;
             }
         }
-
-        if(from==false || to==false){
+        for(int i=0;i<stations.length;i++){
+            if(bookTicketEntryDto.getToStation().toString().equals(stations[i])){
+                y=i;
+                break;
+            }
+        }
+        if(x==-1||y==-1||y-x<0){
             throw new Exception("Invalid stations");
         }
 
@@ -87,15 +84,15 @@ public class TicketService {
         ticket.setFromStation(bookTicketEntryDto.getFromStation());
         ticket.setToStation(bookTicketEntryDto.getToStation());
 
-        List<Passenger> passengerList = new ArrayList<>();
-
-        for(Integer id : bookTicketEntryDto.getPassengerIds()){
-            Passenger passenger = passengerRepository.findById(id).get();
-            passengerList.add(passenger);
-        }
-
-        passengerList.add(passengerRepository.findById(bookTicketEntryDto.getBookingPersonId()).get());
-        ticket.setPassengersList(passengerList);
+//        List<Passenger> passengerList = new ArrayList<>();
+//
+//        for(Integer id : bookTicketEntryDto.getPassengerIds()){
+//            Passenger passenger = passengerRepository.findById(id).get();
+//            passengerList.add(passenger);
+//        }
+//
+//        passengerList.add(passengerRepository.findById(bookTicketEntryDto.getBookingPersonId()).get());
+        ticket.setPassengersList(passengerList1);
 
         int fare = bookTicketEntryDto.getNoOfSeats()*(y-x)*300;
 
