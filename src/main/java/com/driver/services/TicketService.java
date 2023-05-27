@@ -110,7 +110,7 @@ public class TicketService {
             }
         }
         if(!isArrivalStationOnRoute||!isDepartueStationOnRoute){
-            throw new Exception("InvalidStations");
+            throw new Exception("Invalid stations");
         }
 
 
